@@ -3,6 +3,17 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+const mongoose = require("mongoose");
+
+//---------------------- Connection à Mongoose
+mongoose
+  .connect(
+    "mongodb+srv://Flo:0cqtyX8MHbpwlMqA@cluster0.3wkp8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.log("Connexion à MongoDB échouée !"));
+
 //---------------------- Middleware général : Ajout de header pour permettre à l'app d'accèder à l'API _ CORS = sécurité
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
