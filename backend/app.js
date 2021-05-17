@@ -1,9 +1,9 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
 //---------------------- Middleware général : Ajout de header pour permettre à l'app d'accèder à l'API _ CORS = sécurité
-
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -15,6 +15,35 @@ app.use((req, res, next) => {
     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
   );
   next();
+});
+
+//---------------------- Middleware général : Transforme corps de la requête en obj JS utilisable
+app.use(bodyParser.json());
+
+app.post('/api/sauces', (req, res, next) => {
+    console.log(req.body);
+    res.status(201).json({
+        message: 'Objet créé !'
+    });
+});
+
+app.use('/api/sauces', (req, res, next) => {
+    const sauces = [
+        {
+            id: 'hlzfzef',
+            userId : 'jlmjlmjlm',
+            name: 'Sauce vierge',
+            manufacturer: 'Amora',
+            description: 'Fraiche',
+            mainPepper: 'coraindre',
+            imageUrl: '',
+            heat: 9,
+            likes: 523,
+            dislikes: 3,
+            usersLiked: [],
+            usersDisliked: []
+        }
+    ]
 });
 
 module.exports = app;
