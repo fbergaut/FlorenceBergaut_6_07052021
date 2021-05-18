@@ -1,6 +1,7 @@
 //---------------------- Controllers = stock la logique métier
 
 const Sauce = require("../models/Sauce");
+const Utilisateur = require('../models/Utilisateur');
 const fs = require('fs');
 
 //---------------------- Middleware : Ajouter une sauce
@@ -15,6 +16,26 @@ exports.createSauce = (req, res, next) => {
     .save()
     .then(() => res.status(201).json({ message: "Objet enregistré !" }))
     .catch((error) => res.status(400).json({ error }));
+};
+
+//---------------------- Middleware : Ajouter un like ou dislike à une sauce
+exports.createSauceLike = (req, res, next) => {
+  Utilisateur.findOne({ userId: req.body.userId })
+    .then(like => {
+      const sauceObject = JSON.parse(req.body.sauce);
+      if (like = 1) {
+        sauceObject.usersLiked.push(userId);
+        res.status(200).json({ message: 'Like enregistré !'})
+      } else if (like = 0) {
+        sauceObject.usersLiked.pop(userId);
+        sauceObject.usersDisliked.pop(userId);
+        res.status(200).json({ message: 'Like ou Dislike annulé !' })
+      } else if (like = -1) {
+        sauceObject.usersDisliked.push(userId);
+        res.status(200).json({ message: 'Dislike enregistré !' })
+      }
+    })
+    .catch(error => res.status(500).json({ error }));
 };
 
 //---------------------- Middleware : Modifier une sauce
