@@ -32,6 +32,8 @@ app.use((req, res, next) => {
 //---------------------- Middleware général : Transforme corps de la requête en obj JS utilisable
 app.use(bodyParser.json());
 
+
+//---------------------- Middleware général : Utilise les routes définies dans le fichier routes/sauces.js
 app.use('/api/sauces', sauceRoutes);
 
 
