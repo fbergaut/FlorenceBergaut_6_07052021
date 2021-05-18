@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 //---------------------- Middleware général : Indique le dossier dans lequel les images vont être stockées
-app.use('./images', express.static(path.join(_dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //---------------------- Middleware général : Utilise les routes définies dans le fichier routes/sauces.js
 app.use('/api/sauces', sauceRoutes);
