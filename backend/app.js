@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
+const path = require('path');
 
 const sauceRoutes = require('./routes/sauces');
 const utilisateurRoutes = require('./routes/utilisateurs');
@@ -33,6 +34,8 @@ app.use((req, res, next) => {
 //---------------------- Middleware général : Transforme corps de la requête en obj JS utilisable
 app.use(bodyParser.json());
 
+//---------------------- Middleware général : Indique le dossier dans lequel les images vont être stockées
+app.use('./images', express.static(path.join(_dirname, 'images')));
 
 //---------------------- Middleware général : Utilise les routes définies dans le fichier routes/sauces.js
 app.use('/api/sauces', sauceRoutes);
