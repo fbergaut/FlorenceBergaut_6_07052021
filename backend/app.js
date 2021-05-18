@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 
-const sauceRoutes = require('./routes/sauces')
+const sauceRoutes = require('./routes/sauces');
+const utilisateurRoutes = require('./routes/utilisateurs');
 
 //---------------------- Connection à Mongoose
 mongoose
@@ -35,6 +36,7 @@ app.use(bodyParser.json());
 
 //---------------------- Middleware général : Utilise les routes définies dans le fichier routes/sauces.js
 app.use('/api/sauces', sauceRoutes);
+app.use("/api/auth", utilisateurRoutes);
 
 
 module.exports = app;
