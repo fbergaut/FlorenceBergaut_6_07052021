@@ -18,5 +18,25 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-
+    Utilisateur.findOne({ email: req.body.email })
+        .then(utilisateur => {
+            if(!utilisateur) {
+                return res.status(401).json({ error: 'Utilisateur non trouvé !'});
+            }
+            bcrypt
+              .compare(req.body.password, utilisateur.password)
+              .then(valid => {
+                  if (!valid) {
+                      return res
+                        .status(401)
+                        .json({ error: "Mot de passe incorrect !" });
+                  }
+                  res.status(200).json({
+                      userId: utilisateur._id,
+                      token: 'TOKEN'
+                  });
+              })
+              .catch((error) => res.status(500).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
 };
