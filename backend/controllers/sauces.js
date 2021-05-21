@@ -3,6 +3,7 @@
 const Sauce = require("../models/Sauce");
 const Utilisateur = require('../models/Utilisateur');
 const fs = require('fs');
+const jwt = require("jsonwebtoken");
 
 //---------------------- Middleware : Ajouter une sauce
 exports.createSauce = (req, res, next) => {
@@ -19,24 +20,47 @@ exports.createSauce = (req, res, next) => {
 };
 
 //---------------------- Middleware : Ajouter un like ou dislike à une sauce
+// exports.createSauceLike = (req, res, next) => {
+//   Utilisateur.findOne({ userId: req.body.userId })
+//     .then(like => {
+//       const sauceObject = JSON.parse(req.body.sauce);
+//       if (like = 1) {
+//         sauceObject.usersLiked.push(userId);
+//         res.status(200).json({ message: 'Like enregistré !'})
+//       } else if (like = 0) {
+//         sauceObject.usersLiked.pop(userId);
+//         sauceObject.usersDisliked.pop(userId);
+//         res.status(200).json({ message: 'Like ou Dislike annulé !' })
+//       } else if (like = -1) {
+//         sauceObject.usersDisliked.push(userId);
+//         res.status(200).json({ message: 'Dislike enregistré !' })
+//       }
+//     })
+//     .catch(error => res.status(500).json({ error }));
+// };
+
 exports.createSauceLike = (req, res, next) => {
-  Utilisateur.findOne({ userId: req.body.userId })
-    .then(like => {
-      const sauceObject = JSON.parse(req.body.sauce);
-      if (like = 1) {
-        sauceObject.usersLiked.push(userId);
-        res.status(200).json({ message: 'Like enregistré !'})
-      } else if (like = 0) {
-        sauceObject.usersLiked.pop(userId);
-        sauceObject.usersDisliked.pop(userId);
-        res.status(200).json({ message: 'Like ou Dislike annulé !' })
-      } else if (like = -1) {
-        sauceObject.usersDisliked.push(userId);
-        res.status(200).json({ message: 'Dislike enregistré !' })
-      }
+  Sauce.findOne({ _id: req.params.id })
+    .then(sauce => {
+      const token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+      var userId = decoded.userId;
+      var likes = 0;
+      Sauce.updateOne(
+        { _id: req.params.id },
+        {
+          $inc: { likes: 1 } ,
+          $set: { usersLiked: [userId] },
+        }
+      )
+        .then(() => res.status(200).json({ message: "Objet modifié !" }))
+        .catch((error) => res.status(400).json({ error }));
+      console.log(sauce.likes);
     })
     .catch(error => res.status(500).json({ error }));
-};
+ };
+
+
 
 //---------------------- Middleware : Modifier une sauce
 exports.modifySauce = (req, res, next) => {
