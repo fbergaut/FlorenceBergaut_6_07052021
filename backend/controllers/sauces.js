@@ -45,17 +45,50 @@ exports.createSauceLike = (req, res, next) => {
       const token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, "RANDOM_TOKEN_SECRET");
       var userId = decoded.userId;
-      var likes = 0;
-      Sauce.updateOne(
-        { _id: req.params.id },
-        {
-          $inc: { likes: 1 } ,
-          $set: { usersLiked: [userId] },
+
+      if (req.body.like == 1) {
+        Sauce.updateOne(
+          { _id: req.params.id },
+          {
+            $inc: { likes: 1 },
+            $push: { usersLiked: userId },
+          }
+        )
+          .then(() => res.status(200).json({ message: "Objet modifié !" }))
+          .catch((error) => res.status(400).json({ error }));
+      } else if (req.body.like == 0) {
+        if (sauce.usersLiked.includes(userId)) {
+          Sauce.updateOne(
+            { _id: req.params.id },
+            {
+              $inc: { likes: -1 },
+              $pull: { usersLiked: userId },
+            }
+          )
+            .then(() => res.status(200).json({ message: "Objet modifié !" }))
+            .catch((error) => res.status(400).json({ error }));
+        } else if (sauce.usersDisliked.includes(userId)) {
+          Sauce.updateOne(
+            { _id: req.params.id },
+            {
+              $inc: { dislikes: -1 },
+              $pull: { usersDisliked: userId },
+            }
+          )
+            .then(() => res.status(200).json({ message: "Objet modifié !" }))
+            .catch((error) => res.status(400).json({ error }));
         }
-      )
-        .then(() => res.status(200).json({ message: "Objet modifié !" }))
-        .catch((error) => res.status(400).json({ error }));
-      console.log(sauce.likes);
+      } else if (req.body.like == -1) {
+        Sauce.updateOne(
+          { _id: req.params.id },
+          {
+            $inc: { dislikes: 1 },
+            $push: { usersDisliked: userId },
+          }
+        )
+          .then(() => res.status(200).json({ message: "Objet modifié !" }))
+          .catch((error) => res.status(400).json({ error }));
+      }
     })
     .catch(error => res.status(500).json({ error }));
  };
