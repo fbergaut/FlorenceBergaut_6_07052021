@@ -2,16 +2,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 const path = require('path');
+const dotenv = require('dotenv').config();
 
 const sauceRoutes = require('./routes/sauces');
 const utilisateurRoutes = require('./routes/utilisateurs');
 
 //---------------------- Connection à Mongoose
 mongoose
-  .connect(
-    "mongodb+srv://Flo:0cqtyX8MHbpwlMqA@cluster0.3wkp8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(process.env.DB_CONNEXION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
