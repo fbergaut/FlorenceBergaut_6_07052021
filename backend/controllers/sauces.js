@@ -4,6 +4,7 @@ const Sauce = require("../models/Sauce");
 const Utilisateur = require('../models/Utilisateur');
 const fs = require('fs');
 const jwt = require("jsonwebtoken");
+const { param } = require("../routes/sauces");
 
 //---------------------- Middleware : Ajouter une sauce
 exports.createSauce = (req, res, next) => {
@@ -11,7 +12,9 @@ exports.createSauce = (req, res, next) => {
   delete sauceObject.id;
   const sauce = new Sauce({
     ...sauceObject,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    likes: 0,
+    dislikes: 0,
   });
   sauce
     .save()
@@ -20,30 +23,11 @@ exports.createSauce = (req, res, next) => {
 };
 
 //---------------------- Middleware : Ajouter un like ou dislike à une sauce
-// exports.createSauceLike = (req, res, next) => {
-//   Utilisateur.findOne({ userId: req.body.userId })
-//     .then(like => {
-//       const sauceObject = JSON.parse(req.body.sauce);
-//       if (like = 1) {
-//         sauceObject.usersLiked.push(userId);
-//         res.status(200).json({ message: 'Like enregistré !'})
-//       } else if (like = 0) {
-//         sauceObject.usersLiked.pop(userId);
-//         sauceObject.usersDisliked.pop(userId);
-//         res.status(200).json({ message: 'Like ou Dislike annulé !' })
-//       } else if (like = -1) {
-//         sauceObject.usersDisliked.push(userId);
-//         res.status(200).json({ message: 'Dislike enregistré !' })
-//       }
-//     })
-//     .catch(error => res.status(500).json({ error }));
-// };
-
 exports.createSauceLike = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
       const token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+      const decoded = jwt.verify(token, process.env.TOKEN);
       var userId = decoded.userId;
 
       if (req.body.like == 1) {
@@ -52,9 +36,10 @@ exports.createSauceLike = (req, res, next) => {
           {
             $inc: { likes: 1 },
             $push: { usersLiked: userId },
+            _id: req.params.id,
           }
         )
-          .then(() => res.status(200).json({ message: "Objet modifié !" }))
+          .then(() => res.status(201).json({ message: 'Sauce likée avec succès !' }))
           .catch((error) => res.status(400).json({ error }));
       } else if (req.body.like == 0) {
         if (sauce.usersLiked.includes(userId)) {
