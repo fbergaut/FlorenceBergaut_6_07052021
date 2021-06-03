@@ -1,8 +1,8 @@
 //---------------------- Controllers = stock la logique métier
 
 const Sauce = require("../models/Sauce");
-const Utilisateur = require('../models/Utilisateur');
-const fs = require('fs');
+const Utilisateur = require("../models/Utilisateur");
+const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const { param } = require("../routes/sauces");
 
@@ -12,7 +12,9 @@ exports.createSauce = (req, res, next) => {
   delete sauceObject.id;
   const sauce = new Sauce({
     ...sauceObject,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`,
     likes: 0,
     dislikes: 0,
   });
@@ -25,8 +27,8 @@ exports.createSauce = (req, res, next) => {
 //---------------------- Middleware : Ajouter un like ou dislike à une sauce
 exports.createSauceLike = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
-    .then(sauce => {
-      const token = req.headers.authorization.split(' ')[1];
+    .then((sauce) => {
+      const token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.TOKEN);
       var userId = decoded.userId;
 
@@ -39,7 +41,9 @@ exports.createSauceLike = (req, res, next) => {
             _id: req.params.id,
           }
         )
-          .then(() => res.status(201).json({ message: 'Sauce likée avec succès !' }))
+          .then(() =>
+            res.status(201).json({ message: "Sauce likée avec succès !" })
+          )
           .catch((error) => res.status(400).json({ error }));
       } else if (req.body.like == 0) {
         if (sauce.usersLiked.includes(userId)) {
@@ -75,17 +79,17 @@ exports.createSauceLike = (req, res, next) => {
           .catch((error) => res.status(400).json({ error }));
       }
     })
-    .catch(error => res.status(500).json({ error }));
- };
-
-
+    .catch((error) => res.status(500).json({ error }));
+};
 
 //---------------------- Middleware : Modifier une sauce
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file
     ? {
         ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
       }
     : { ...req.body };
   Sauce.updateOne(
@@ -99,15 +103,15 @@ exports.modifySauce = (req, res, next) => {
 //---------------------- Middleware : Supprimer une sauce
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
-    .then(sauce => {
-      const filename = sauce.imageUrl.split('/images/')[1];
+    .then((sauce) => {
+      const filename = sauce.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: "Objet supprimé !" }))
           .catch((error) => res.status(400).json({ error }));
       });
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch((error) => res.status(500).json({ error }));
 };
 
 //---------------------- Middleware : Récupèrer une sauce
