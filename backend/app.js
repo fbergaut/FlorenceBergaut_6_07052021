@@ -16,6 +16,7 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
+//---------------------- Création de l'application Express
 const app = express();
 
 //---------------------- Middleware général : Ajout de header pour permettre à l'app d'accèder à l'API _ CORS = sécurité
@@ -42,5 +43,5 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/sauces', sauceRoutes);
 app.use("/api/auth", utilisateurRoutes);
 
-
+//---------------------- On exporte l'application pour y accèder depuis les autres fichiers
 module.exports = app;

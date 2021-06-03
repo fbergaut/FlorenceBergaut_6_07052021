@@ -41,6 +41,7 @@ const errorHandler = (error) => {
   }
 };
 
+//------------------------------- Création du server auquel on passe en argument app
 const server = http.createServer(app);
 
 //------------------------------- écouteur d'évènements est également enregistré, consignant le port ou le canal nommé sur lequel le serveur s'exécute dans la console
