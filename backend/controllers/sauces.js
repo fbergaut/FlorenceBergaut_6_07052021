@@ -9,6 +9,7 @@ const { param } = require("../routes/sauces");
 //---------------------- Middleware : Ajouter une sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
+  // On enlève l'Id généré automatiquement par MongoDB
   delete sauceObject.id;
   const sauce = new Sauce({
     ...sauceObject,
@@ -18,6 +19,7 @@ exports.createSauce = (req, res, next) => {
     likes: 0,
     dislikes: 0,
   });
+  // On enregistre l'objet dans la BDD
   sauce
     .save()
     .then(() => res.status(201).json({ message: "Objet enregistré !" }))

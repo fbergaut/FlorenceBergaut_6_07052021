@@ -4,6 +4,14 @@ const jwt = require("jsonwebtoken");
 const Utilisateur = require("../models/Utilisateur");
 
 exports.signup = (req, res, next) => {
+  Utilisateur.findOne({ email: req.body.email })
+  .then((utilisateur) => {
+    if (utilisateur) {
+      console.log(utilisateur);
+      return res.json({ error: "Email déjà existant !" });
+    }
+  });
+  console.log('erreur email trouvé');
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
@@ -20,6 +28,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+  console.log('login');
   Utilisateur.findOne({ email: req.body.email })
     .then((utilisateur) => {
       if (!utilisateur) {
