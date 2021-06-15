@@ -11,24 +11,24 @@ Compétences travaillées :
 
 Dans le détail :
 
-1- UNE ARCHITECTURE S’INSPIRANT DU MODÈLE MVC
+1- Une architecture s'inspirant du modèle MVC
 
-2- METTRE EN PLACE UN SERVER ET CRÉER UNE APPLICATION EXPRESS
+2- Mettre en place un server et créer un application Express
 
-3- STOCKER LES DATAS DANS UNE BDD MONGODB AVEC MONGOOSE
+3- Stocker les datas dans une BDD mongoDB avec Mongoose
 
-4- IMPLÉMENTER UN MODÈLE LOGIQUE DE DONNÉES CONFORMÉMENT À LA RÉGLEMENTATION
+4- Implémenter un modèle logique de données conformément à la réglementation
 
-5- CRÉATION DES ROUTEURS : LA LOGIQUE DE ROUTING
+5- Création des routeurs : la logique de routing
 
-6- CRÉATION DES CONTROLLEURS : LA LOGIQUE MÉTIER
+6- Création des controllers : la logique métier
 
-7- SÉCURITÉ CORS : MIDDLEWARE DE PARAMÉTRAGE DE HEADERS
+7- Sécurité CORS : Middleware de paramétrage de headers
 
-8- METTRE EN OEUVRE DES OPÉRATIONS CRUD : ROUTE GET, POST, PUT, DELETE
+8- Mettre en oeuvre des opérations CRUD : GET, POST, PUT, DELETE
 
-9- GÉRER DES FICHIERS ENTRANTS
+9- Gérer des fichiers entrants
 
-10- SÉCURISER LES DATAS COTÉ API ET BDD
+10- Sécuriser les datas côté API et BDD
 
 
